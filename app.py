@@ -3,10 +3,21 @@ from database import get_db
 
 app = Flask(__name__)
 
-# Ordered by id DESC to show most recently added games first, limit to 100.
+# Ordered by id DESC to show most recently added games first, with pagination.
 @app.route('/')
 def home():
+    per_page = 20
+    page = request.args.get('page', 1, type=int)
+    if page is None or page < 1:
+        page = 1
+
     db = get_db()
+    total_games = db.execute('SELECT COUNT(*) AS total FROM games').fetchone()['total']
+    total_pages = max((total_games + per_page - 1) // per_page, 1)
+    if page > total_pages:
+        page = total_pages
+
+    offset = (page - 1) * per_page
     games = db.execute('''
         SELECT games.id, games.title, consoles.name AS console, genres.name AS genre,
                games.critic_score, games.total_sales
@@ -14,10 +25,17 @@ def home():
         JOIN consoles ON games.console_id = consoles.id
         JOIN genres ON games.genre_id = genres.id
         ORDER BY games.id DESC
-        LIMIT 100
-    ''').fetchall()
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
     db.close()
-    return render_template('index.html', games=games)
+    return render_template(
+        'index.html',
+        games=games,
+        page=page,
+        total_pages=total_pages,
+        has_prev=(page > 1),
+        has_next=(page < total_pages)
+    )
 
 # Route for adding a new game.
 @app.route('/games/add', methods=['GET', 'POST'])
