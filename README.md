@@ -1,6 +1,6 @@
-# CS348 Project - Video Games Sales Manager
+# CS348 Project - Video Games Sales Dashboard
 
-A Flask + SQLite web application for browsing and managing video game sales data.
+A web application for browsing and managing video game sales data.
 
 ## Author
 
@@ -8,7 +8,8 @@ Aakansha Kedia
 
 ## AI Usage Disclaimer
 
-xyz....
+I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements, and to integrate my SQL queries with Flask routes. I also used it to make the baseline HTML as I am not well-versed with HTML. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project.
+
 
 ## Tech Stack
 
