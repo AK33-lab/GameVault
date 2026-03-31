@@ -19,6 +19,7 @@ def home():
     db.close()
     return render_template('index.html', games=games)
 
+# Route for adding a new game.
 @app.route('/games/add', methods=['GET', 'POST'])
 def add_game():
     db = get_db()
@@ -46,6 +47,7 @@ def add_game():
     db.close()
     return render_template('add_game.html', genres=genres, consoles=consoles)
 
+# Route for editing an existing game.
 @app.route('/games/edit/<int:id>', methods=['GET', 'POST'])
 def edit_game(id):
     db = get_db()
@@ -77,6 +79,7 @@ def edit_game(id):
     db.close()
     return render_template('edit_game.html', game=game, genres=genres, consoles=consoles)
 
+# Route for deleting a game.
 @app.route('/games/delete/<int:id>')
 def delete_game(id):
     db = get_db()
