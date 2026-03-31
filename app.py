@@ -1,9 +1,11 @@
 from flask import Flask
+from database import get_db
+
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "<h1>CS348 Project Stage 1</h1><p>Hello World! </p>"
+    return "App is running, LFG!"
 
 if __name__ == '__main__':
     app.run(debug=True)
