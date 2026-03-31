@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Games Manager</title>
+</head>
+<body>
+    <h1>Video Games Manager</h1>
+    <a href="/games/add">+ Add New Game</a>
+    <a href="/report" style="margin-left: 20px;">View Report</a>
+
+    <table border="1" style="margin-top: 20px; border-collapse: collapse;">
+        <tr>
+            <th>Title</th>
+            <th>Console</th>
+            <th>Genre</th>
+            <th>Critic Score</th>
+            <th>Total Sales (mil)</th>
+            <th>Actions</th>
+        </tr>
+        {% for game in games %}
+        <tr>
+            <td>{{ game['title'] }}</td>
+            <td>{{ game['console'] }}</td>
+            <td>{{ game['genre'] }}</td>
+            <td>{{ game['critic_score'] }}</td>
+            <td>{{ game['total_sales'] }}</td>
+            <td>
+                <a href="/games/edit/{{ game['id'] }}">Edit</a>
+                <a href="/games/delete/{{ game['id'] }}" 
+                   onclick="return confirm('Delete this game?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
