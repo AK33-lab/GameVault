@@ -1,30 +1,63 @@
-# CS348 Project
+# CS348 Project - Video Games Sales Manager
 
-Flask web app to view video game sales
+A Flask + SQLite web application for browsing and managing video game sales data.
 
 ## Author
 
 Aakansha Kedia
 
-## Project Structure
+## AI Usage Disclaimer
 
-- app.py: Flask app and route handlers
-- database.py: database connection/helper logic
-- import_data.py: script to import CSV data into the database
-- schema.sql: database schema
-- VideoGamesSales.csv: source dataset
-- templates/: HTML templates for pages
+xyz....
 
-## Run
+## Tech Stack
 
-Create database with: ``python import_data.py``
-
-Start the app with: ``python app.py``
-
-Then open the local URL printed in the terminal.
+- Python 3
+- Flask
+- SQLite
+- HTML (Jinja templates)
 
 ## Features
 
-- Delete a game from DB
-- Add a new game to DB
+- View games with pagination (20 per page)
+- Add new game records
 - Edit existing game records
+- Delete game records
+- Generate filtered reports by:
+	- Genre
+	- Console
+	- Critic score range
+- See report summary statistics:
+	- Number of games
+	- Average critic score
+	- Average total sales
+	- Total sales
+
+## Project Structure
+
+- `app.py`: Flask app routes and page logic
+- `database.py`: SQLite connection helper
+- `import_data.py`: Imports CSV data into SQLite database
+- `schema.sql`: Database schema (genres, consoles, games)
+- `VideoGamesSales.csv`: Source dataset
+- `games.db`: Generated SQLite database file
+- `templates/index.html`: Home page with paginated table
+- `templates/add_game.html`: Add game form
+- `templates/edit_game.html`: Edit game form
+- `templates/report.html`: Filtered report page with stats
+
+## Initialize Database
+
+Run the importer to create tables from `schema.sql` and load data from `VideoGamesSales.csv`:
+
+```bash
+python3 import_data.py
+```
+
+## Run the App
+
+```bash
+python3 app.py
+```
+
+Open the URL shown in terminal.
