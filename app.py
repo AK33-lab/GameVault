@@ -3,6 +3,7 @@ from database import get_db
 
 app = Flask(__name__)
 
+# Ordered by id DESC to show most recently added games first, limit to 100.
 @app.route('/')
 def home():
     db = get_db()
