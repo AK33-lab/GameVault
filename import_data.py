@@ -1,3 +1,4 @@
+# Create the database and import data from CSV
 import sqlite3
 import csv
 
