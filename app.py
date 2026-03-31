@@ -88,5 +88,70 @@ def delete_game(id):
     db.close()
     return redirect(url_for('home'))
 
+# Filtering route to generate reports based on genre, console, and critic score range.
+@app.route('/report', methods=['GET', 'POST'])
+def report():
+    db = get_db()
+    genres = db.execute('SELECT * FROM genres ORDER BY name').fetchall()
+    consoles = db.execute('SELECT * FROM consoles ORDER BY name').fetchall()
+    
+    games = []
+    stats = None
+    filters = {}
+
+    if request.method == 'POST':
+        filters['genre_id'] = request.form.get('genre_id')
+        filters['console_id'] = request.form.get('console_id')
+        filters['min_score'] = request.form.get('min_score')
+        filters['max_score'] = request.form.get('max_score')
+
+        query = '''
+            SELECT games.id, games.title, consoles.name AS console, genres.name AS genre,
+                   games.critic_score, games.total_sales, games.na_sales, games.jp_sales
+            FROM games
+            JOIN consoles ON games.console_id = consoles.id
+            JOIN genres ON games.genre_id = genres.id
+            WHERE 1=1
+        '''
+        params = []
+
+        if filters['genre_id']:
+            query += ' AND games.genre_id = ?'
+            params.append(filters['genre_id'])
+        if filters['console_id']:
+            query += ' AND games.console_id = ?'
+            params.append(filters['console_id'])
+        if filters['min_score']:
+            query += ' AND games.critic_score >= ?'
+            params.append(filters['min_score'])
+        if filters['max_score']:
+            query += ' AND games.critic_score <= ?'
+            params.append(filters['max_score'])
+
+        query += ' ORDER BY games.critic_score DESC'
+
+        games = db.execute(query, params).fetchall()
+
+        if games:
+            stats = db.execute('''
+                SELECT COUNT(*) AS total,
+                       ROUND(AVG(critic_score), 2) AS avg_score,
+                       ROUND(AVG(total_sales), 2) AS avg_sales,
+                       ROUND(SUM(total_sales), 2) AS total_sales
+                FROM games
+                JOIN consoles ON games.console_id = consoles.id
+                JOIN genres ON games.genre_id = genres.id
+                WHERE 1=1
+            ''' + (
+                (' AND games.genre_id = ?' if filters['genre_id'] else '') +
+                (' AND games.console_id = ?' if filters['console_id'] else '') +
+                (' AND games.critic_score >= ?' if filters['min_score'] else '') +
+                (' AND games.critic_score <= ?' if filters['max_score'] else '')
+            ), params).fetchone()
+
+    db.close()
+    return render_template('report.html', genres=genres, consoles=consoles,
+                           games=games, stats=stats, filters=filters)
+
 if __name__ == '__main__':
     app.run(debug=True)
