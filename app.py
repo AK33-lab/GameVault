@@ -7,13 +7,28 @@ app = Flask(__name__)
 def home():
     db = get_db()
     games = db.execute('''
-        SELECT games.id, games.title, consoles.name AS console, genres.name AS genre,
-               games.critic_score, games.total_sales
-        FROM games
-        JOIN consoles ON games.console_id = consoles.id
-        JOIN genres ON games.genre_id = genres.id
-        ORDER BY games.id DESC
-        LIMIT 100
+        WITH latest_three AS (
+            SELECT games.id, games.title, consoles.name AS console, genres.name AS genre,
+                   games.critic_score, games.total_sales
+            FROM games
+            JOIN consoles ON games.console_id = consoles.id
+            JOIN genres ON games.genre_id = genres.id
+            ORDER BY games.id DESC
+            LIMIT 3
+        ),
+        random_hundred AS (
+            SELECT games.id, games.title, consoles.name AS console, genres.name AS genre,
+                   games.critic_score, games.total_sales
+            FROM games
+            JOIN consoles ON games.console_id = consoles.id
+            JOIN genres ON games.genre_id = genres.id
+            WHERE games.id NOT IN (SELECT id FROM latest_three)
+            ORDER BY RANDOM()
+            LIMIT 100
+        )
+        SELECT * FROM random_hundred
+        UNION ALL
+        SELECT * FROM latest_three
     ''').fetchall()
     db.close()
     return render_template('index.html', games=games)
