@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from database import get_db
 
 app = Flask(__name__)
@@ -16,6 +16,72 @@ def home():
     ''').fetchall()
     db.close()
     return render_template('index.html', games=games)
+
+@app.route('/games/add', methods=['GET', 'POST'])
+def add_game():
+    db = get_db()
+    if request.method == 'POST':
+        db.execute('''
+            INSERT INTO games (title, console_id, genre_id, publisher, developer, critic_score, total_sales, na_sales, jp_sales)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            request.form['title'],
+            request.form['console_id'],
+            request.form['genre_id'],
+            request.form['publisher'],
+            request.form['developer'],
+            request.form['critic_score'] or None,
+            request.form['total_sales'] or None,
+            request.form['na_sales'] or None,
+            request.form['jp_sales'] or None
+        ))
+        db.commit()
+        db.close()
+        return redirect(url_for('home'))
+    
+    genres = db.execute('SELECT * FROM genres ORDER BY name').fetchall()
+    consoles = db.execute('SELECT * FROM consoles ORDER BY name').fetchall()
+    db.close()
+    return render_template('add_game.html', genres=genres, consoles=consoles)
+
+@app.route('/games/edit/<int:id>', methods=['GET', 'POST'])
+def edit_game(id):
+    db = get_db()
+    if request.method == 'POST':
+        db.execute('''
+            UPDATE games
+            SET title=?, console_id=?, genre_id=?, publisher=?, developer=?,
+                critic_score=?, total_sales=?, na_sales=?, jp_sales=?
+            WHERE id=?
+        ''', (
+            request.form['title'],
+            request.form['console_id'],
+            request.form['genre_id'],
+            request.form['publisher'],
+            request.form['developer'],
+            request.form['critic_score'] or None,
+            request.form['total_sales'] or None,
+            request.form['na_sales'] or None,
+            request.form['jp_sales'] or None,
+            id
+        ))
+        db.commit()
+        db.close()
+        return redirect(url_for('home'))
+
+    game = db.execute('SELECT * FROM games WHERE id = ?', (id,)).fetchone()
+    genres = db.execute('SELECT * FROM genres ORDER BY name').fetchall()
+    consoles = db.execute('SELECT * FROM consoles ORDER BY name').fetchall()
+    db.close()
+    return render_template('edit_game.html', game=game, genres=genres, consoles=consoles)
+
+@app.route('/games/delete/<int:id>')
+def delete_game(id):
+    db = get_db()
+    db.execute('DELETE FROM games WHERE id = ?', (id,))
+    db.commit()
+    db.close()
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)
