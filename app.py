@@ -12,6 +12,7 @@ def home():
         FROM games
         JOIN consoles ON games.console_id = consoles.id
         JOIN genres ON games.genre_id = genres.id
+        ORDER BY games.id DESC
         LIMIT 100
     ''').fetchall()
     db.close()
