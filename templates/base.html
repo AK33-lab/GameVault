@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GameVault - {% block title %}{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Share Tech Mono', monospace; background: #0d0d14; color: #c8c8d8; min-height: 100vh; }
+
+        nav { background: #13131f; border-bottom: 1px solid #2a2a4a; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 700; color: #7f77dd; letter-spacing: 2px; text-decoration: none; }
+        .logo span { color: #5dcaa5; }
+        .nav-links { display: flex; gap: 8px; }
+        .nav-links a { font-size: 12px; padding: 6px 14px; border: 1px solid #2a2a4a; border-radius: 4px; color: #9090b0; text-decoration: none; transition: all 0.2s; }
+        .nav-links a:hover, .nav-links a.active { border-color: #7f77dd; color: #afa9ec; background: #1e1e30; }
+
+        .container { padding: 24px; }
+        .page-title { font-family: 'Orbitron', monospace; font-size: 11px; color: #5f5e7a; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: #13131f; border: 1px solid #2a2a4a; border-radius: 8px; padding: 14px 16px; }
+        .stat-label { font-size: 10px; color: #5f5e7a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-val { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 500; color: #7f77dd; }
+        .stat-val.teal { color: #5dcaa5; }
+        .stat-val.amber { color: #ef9f27; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { font-family: 'Orbitron', monospace; font-size: 10px; color: #5f5e7a; letter-spacing: 2px; text-align: left; padding: 8px 12px; border-bottom: 1px solid #2a2a4a; }
+        td { padding: 10px 12px; border-bottom: 1px solid #1a1a2a; color: #9090b0; }
+        tr:hover td { background: #13131f; color: #c8c8d8; }
+        .td-title { color: #afa9ec; font-weight: 500; }
+
+        .badge { font-size: 10px; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px; }
+        .badge-action   { background: #3c3489; color: #afa9ec; border: 1px solid #534ab7; }
+        .badge-sports   { background: #085041; color: #5dcaa5; border: 1px solid #1d9e75; }
+        .badge-rpg      { background: #712b13; color: #f0997b; border: 1px solid #d85a30; }
+        .badge-shooter  { background: #3b6d11; color: #97c459; border: 1px solid #639922; }
+        .badge-default  { background: #1e1e30; color: #9090b0; border: 1px solid #2a2a4a; }
+
+        .score { font-family: 'Orbitron', monospace; font-size: 13px; color: #5dcaa5; }
+        .score.mid { color: #ef9f27; }
+        .score.low { color: #d85a30; }
+
+        .btn { font-family: 'Share Tech Mono', monospace; font-size: 12px; padding: 8px 18px; border-radius: 4px; cursor: pointer; letter-spacing: 1px; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #7f77dd; border: none; color: #fff; }
+        .btn-primary:hover { background: #afa9ec; }
+        .btn-outline { background: transparent; border: 1px solid #2a2a4a; color: #9090b0; }
+        .btn-outline:hover { border-color: #7f77dd; color: #afa9ec; }
+        .btn-danger { background: transparent; border: 1px solid #2a2a4a; color: #d85a30; }
+        .btn-danger:hover { border-color: #d85a30; background: #1a0a0a; }
+        .btn-edit { font-size: 11px; color: #7f77dd; background: none; border: none; cursor: pointer; font-family: 'Share Tech Mono', monospace; letter-spacing: 1px; margin-right: 8px; }
+        .btn-del  { font-size: 11px; color: #d85a30; background: none; border: none; cursor: pointer; font-family: 'Share Tech Mono', monospace; letter-spacing: 1px; }
+
+        .filter-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+        select, input[type="text"], input[type="number"] {
+            font-family: 'Share Tech Mono', monospace; font-size: 12px;
+            background: #13131f; border: 1px solid #2a2a4a; border-radius: 4px;
+            color: #c8c8d8; padding: 7px 12px;
+        }
+        select:focus, input:focus { outline: none; border-color: #7f77dd; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 11px; color: #5f5e7a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; max-width: 400px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 816px; }
+
+        .summary-bar { background: #13131f; border: 1px solid #2a2a4a; border-radius: 8px; padding: 14px 20px; margin-bottom: 20px; display: flex; gap: 32px; flex-wrap: wrap; }
+        .summary-item { font-size: 12px; color: #5f5e7a; }
+        .summary-item span { color: #7f77dd; font-family: 'Orbitron', monospace; font-size: 14px; margin-left: 8px; }
+
+        .flash { padding: 10px 16px; border-radius: 4px; margin-bottom: 16px; font-size: 12px; background: #085041; border: 1px solid #1d9e75; color: #5dcaa5; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="logo" href="/">GAME<span>VAULT</span></a>
+        <div class="nav-links">
+            <a href="/" class="{% if request.path == '/' %}active{% endif %}">games</a>
+            <a href="/report" class="{% if request.path == '/report' %}active{% endif %}">report</a>
+            <a href="/games/add" class="{% if request.path == '/games/add' %}active{% endif %}">+ add game</a>
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

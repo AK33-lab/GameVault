@@ -8,7 +8,7 @@ Aakansha Kedia
 
 ## AI Usage Disclaimer
 
-I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements, and to integrate my SQL queries with Flask routes. I also used it to make the baseline HTML as I am not well-versed with HTML. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project.
+I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements (in ``templates/base.html``), and to integrate my SQL queries with Flask routes. I also used it to make the baseline ``index.html``. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project.
 
 
 ## Tech Stack

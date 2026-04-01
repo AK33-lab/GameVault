@@ -3,7 +3,6 @@ from database import get_db
 
 app = Flask(__name__)
 
-# Ordered by id DESC to show most recently added games first, with pagination.
 @app.route('/')
 def home():
     per_page = 20
@@ -24,7 +23,6 @@ def home():
         FROM games
         JOIN consoles ON games.console_id = consoles.id
         JOIN genres ON games.genre_id = genres.id
-        ORDER BY games.id DESC
         LIMIT ? OFFSET ?
     ''', (per_page, offset)).fetchall()
     db.close()

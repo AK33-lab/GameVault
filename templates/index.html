@@ -1,63 +1,87 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Video Games Manager</title>
-</head>
-<body>
-    <h1>Video Games Manager</h1>
-    <a href="/games/add">+ Add New Game</a>
-    <a href="/report" style="margin-left: 20px;">View Report</a>
+{% extends 'base.html' %}
+{% block title %}Library{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div>
+        <div class="page-title">// Game Sales</div>
+        <a href="https://www.kaggle.com/datasets/lamskdna/video-games-sales" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: var(--muted); text-decoration: underline;">Kaggle dataset</a>
+    </div>
+    <a href="/games/add" class="btn btn-primary">+ NEW GAME</a>
+</div>
 
-    <table border="1" style="margin-top: 20px; border-collapse: collapse;">
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">total games</div>
+        <div class="stat-val">64,016</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">consoles</div>
+        <div class="stat-val teal">81</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">genres</div>
+        <div class="stat-val amber">20</div>
+    </div>
+</div>
+
+<table>
+    <thead>
         <tr>
-            <th>Title</th>
-            <th>Console</th>
-            <th>Genre</th>
-            <th>Critic Score</th>
-            <th>Total Sales (mil)</th>
-            <th>Actions</th>
+            <th>title</th><th>console</th><th>genre</th><th>score</th><th>sales (mil)</th><th>actions</th>
         </tr>
+    </thead>
+    <tbody>
         {% for game in games %}
         <tr>
-            <td>{{ game['title'] }}</td>
+            <td class="td-title">{{ game['title'] }}</td>
             <td>{{ game['console'] }}</td>
-            <td>{{ game['genre'] }}</td>
-            <td>{{ game['critic_score'] }}</td>
-            <td>{{ game['total_sales'] }}</td>
+            <td><span class="badge badge-{{ game['genre'].lower() if game['genre'].lower() in ['action','sports','rpg','shooter'] else 'default' }}">{{ game['genre'] }}</span></td>
             <td>
-                <a href="/games/edit/{{ game['id'] }}">Edit</a>
-                <a href="/games/delete/{{ game['id'] }}" 
-                   onclick="return confirm('Delete this game?')">Delete</a>
+                {% if game['critic_score'] %}
+                    <span class="score {% if game['critic_score'] < 7 %}low{% elif game['critic_score'] < 8.5 %}mid{% endif %}">
+                        {{ game['critic_score'] }}
+                    </span>
+                {% else %} — {% endif %}
+            </td>
+            <td>{{ game['total_sales'] or '—' }}</td>
+            <td>
+                <a class="btn-edit" href="/games/edit/{{ game['id'] }}">EDIT</a>
+                <a class="btn-del" href="/games/delete/{{ game['id'] }}" onclick="return confirm('Delete this game?')">DELETE</a>
             </td>
         </tr>
         {% endfor %}
-        {% if not games %}
-        <tr>
-            <td colspan="6" style="text-align: center;">No games found.</td>
-        </tr>
-        {% endif %}
-    </table>
+    </tbody>
+</table>
 
-    <div style="margin-top: 16px;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; gap: 12px; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 8px;">
         {% if has_prev %}
-            <a href="{{ url_for('home', page=page-1) }}">Previous</a>
+            <a class="btn-edit" href="{{ url_for('home', page=page - 1) }}">PREV</a>
         {% else %}
-            <span style="color: #888;">Previous</span>
+            <span class="btn-edit" style="opacity: 0.45; pointer-events: none;">PREV</span>
         {% endif %}
 
-        <span style="margin: 0 12px;">Page {{ page }} of {{ total_pages }}</span>
+        <span style="font-size: 12px; color: var(--muted);">page {{ page }} of {{ total_pages }}</span>
 
         {% if has_next %}
-            <a href="{{ url_for('home', page=page+1) }}">Next</a>
+            <a class="btn-edit" href="{{ url_for('home', page=page + 1) }}">NEXT</a>
         {% else %}
-            <span style="color: #888;">Next</span>
+            <span class="btn-edit" style="opacity: 0.45; pointer-events: none;">NEXT</span>
         {% endif %}
-
-        <form action="{{ url_for('home') }}" method="get" style="display: inline; margin-left: 16px;">
-            <label for="page">Go to page:</label>
-            <input id="page" name="page" type="number" min="1" max="{{ total_pages }}" value="{{ page }}" style="width: 70px;" required>
-            <button type="submit">Go</button>
-        </form>
     </div>
-</body>
-</html>
+
+    <form method="get" action="{{ url_for('home') }}" style="display: flex; align-items: center; gap: 8px;">
+        <label for="page" style="font-size: 12px; color: var(--muted);">jump to page</label>
+        <input
+            id="page"
+            name="page"
+            type="number"
+            min="1"
+            max="{{ total_pages }}"
+            value="{{ page }}"
+            style="width: 78px; background: var(--bg-2); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px;"
+        >
+        <button type="submit" class="btn btn-primary">GO</button>
+    </form>
+</div>
+{% endblock %}

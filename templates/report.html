@@ -1,81 +1,67 @@
-<!DOCTYPE html>
-<html>
-<head><title>Games Report</title></head>
-<body>
-    <h1>Games Report</h1>
-    <a href="/">← Back to Home</a>
+{% extends 'base.html' %}
+{% block title %}Report{% endblock %}
+{% block content %}
+<div class="page-title">// games report</div>
 
-    <form method="POST" style="margin-top: 20px;">
-        <label>Genre:
-            <select name="genre_id">
-                <option value="">-- All Genres --</option>
-                {% for genre in genres %}
-                <option value="{{ genre['id'] }}"
-                    {% if filters.get('genre_id') == genre['id']|string %}selected{% endif %}>
-                    {{ genre['name'] }}
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-        &nbsp;&nbsp;
-        <label>Console:
-            <select name="console_id">
-                <option value="">-- All Consoles --</option>
-                {% for console in consoles %}
-                <option value="{{ console['id'] }}"
-                    {% if filters.get('console_id') == console['id']|string %}selected{% endif %}>
-                    {{ console['name'] }}
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-        &nbsp;&nbsp;
-        <label>Min Score: <input type="number" step="0.1" min="0" max="10" name="min_score" 
-               value="{{ filters.get('min_score', '') }}" style="width: 60px;"></label>
-        &nbsp;
-        <label>Max Score: <input type="number" step="0.1" min="0" max="10" name="max_score" 
-               value="{{ filters.get('max_score', '') }}" style="width: 60px;"></label>
-        &nbsp;&nbsp;
-        <button type="submit">Generate Report</button>
-    </form>
-
-    {% if games %}
-        <!-- Stats -->
-        <div style="margin-top: 20px; padding: 10px; background: #f0f0f0;">
-            <strong>Results Summary:</strong>
-            Total Games: {{ stats['total'] }} |
-            Avg Critic Score: {{ stats['avg_score'] }} |
-            Avg Total Sales: {{ stats['avg_sales'] }} mil |
-            Total Sales: {{ stats['total_sales'] }} mil
-        </div>
-
-        <!-- Results Table -->
-        <table border="1" style="margin-top: 20px; border-collapse: collapse;">
-            <tr>
-                <th>Title</th>
-                <th>Console</th>
-                <th>Genre</th>
-                <th>Critic Score</th>
-                <th>Total Sales (mil)</th>
-                <th>NA Sales (mil)</th>
-                <th>JP Sales (mil)</th>
-            </tr>
-            {% for game in games %}
-            <tr>
-                <td>{{ game['title'] }}</td>
-                <td>{{ game['console'] }}</td>
-                <td>{{ game['genre'] }}</td>
-                <td>{{ game['critic_score'] }}</td>
-                <td>{{ game['total_sales'] }}</td>
-                <td>{{ game['na_sales'] }}</td>
-                <td>{{ game['jp_sales'] }}</td>
-            </tr>
+<form method="POST">
+    <div class="filter-bar">
+        <select name="genre_id">
+            <option value="">-- all genres --</option>
+            {% for genre in genres %}
+            <option value="{{ genre['id'] }}" {% if filters.get('genre_id') == genre['id']|string %}selected{% endif %}>
+                {{ genre['name'] }}
+            </option>
             {% endfor %}
-        </table>
+        </select>
+        <select name="console_id">
+            <option value="">-- all consoles --</option>
+            {% for console in consoles %}
+            <option value="{{ console['id'] }}" {% if filters.get('console_id') == console['id']|string %}selected{% endif %}>
+                {{ console['name'] }}
+            </option>
+            {% endfor %}
+        </select>
+        <input type="number" step="0.1" min="0" max="10" name="min_score" placeholder="min score" value="{{ filters.get('min_score', '') }}" style="width: 100px;">
+        <input type="number" step="0.1" min="0" max="10" name="max_score" placeholder="max score" value="{{ filters.get('max_score', '') }}" style="width: 100px;">
+        <button type="submit" class="btn btn-primary">GENERATE REPORT</button>
+    </div>
+</form>
 
-    {% elif request.method == 'POST' %}
-        <p style="margin-top: 20px;">No games found matching your filters.</p>
-    {% endif %}
+{% if games %}
+<div class="summary-bar">
+    <div class="summary-item">total results <span>{{ stats['total'] }}</span></div>
+    <div class="summary-item">avg critic score <span>{{ stats['avg_score'] }}</span></div>
+    <div class="summary-item">avg sales <span>${{ stats['avg_sales'] }}M</span></div>
+    <div class="summary-item">total sales <span>${{ stats['total_sales'] }}M</span></div>
+</div>
 
-</body>
-</html>
+<table>
+    <thead>
+        <tr>
+            <th>title</th><th>console</th><th>genre</th><th>score</th><th>total sales (mil)</th><th>na sales</th><th>jp sales</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for game in games %}
+        <tr>
+            <td class="td-title">{{ game['title'] }}</td>
+            <td>{{ game['console'] }}</td>
+            <td><span class="badge badge-{{ game['genre'].lower() if game['genre'].lower() in ['action','sports','rpg','shooter'] else 'default' }}">{{ game['genre'] }}</span></td>
+            <td>
+                {% if game['critic_score'] %}
+                    <span class="score {% if game['critic_score'] < 7 %}low{% elif game['critic_score'] < 8.5 %}mid{% endif %}">
+                        {{ game['critic_score'] }}
+                    </span>
+                {% else %} — {% endif %}
+            </td>
+            <td>{{ game['total_sales'] or '—' }}</td>
+            <td>{{ game['na_sales'] or '—' }}</td>
+            <td>{{ game['jp_sales'] or '—' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% elif request.method == 'POST' %}
+    <p style="color: #5f5e7a; margin-top: 20px;">// no games found matching filters.</p>
+{% endif %}
+{% endblock %}
