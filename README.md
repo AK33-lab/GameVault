@@ -1,4 +1,4 @@
-# CS348 Project - Video Games Sales Dashboard
+# GameVault - Video Games Sales Dashboard
 
 A web application for browsing and managing video game sales data.
 
