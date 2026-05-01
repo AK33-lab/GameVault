@@ -1,0 +1,5 @@
+*.pyc
+__pycache__/
+*.csv
+import_data.py
+games.db
