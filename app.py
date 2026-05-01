@@ -13,7 +13,13 @@ def home():
         page = 1
     db = get_db()
     try:
-        total_games = db.execute('SELECT COUNT(*) AS total FROM games').fetchone()['total']
+        stats = db.execute('''
+            SELECT COUNT(*) AS total_games,
+                   COUNT(DISTINCT console_id) AS consoles,
+                   COUNT(DISTINCT genre_id) AS genres
+            FROM games
+        ''').fetchone()
+        total_games = stats['total_games']
         total_pages = max((total_games + per_page - 1) // per_page, 1)
         if page > total_pages:
             page = total_pages
@@ -30,6 +36,7 @@ def home():
         return render_template(
             'index.html',
             games=games,
+            stats=stats,
             page=page,
             total_pages=total_pages,
             has_prev=(page > 1),
