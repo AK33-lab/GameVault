@@ -8,8 +8,7 @@ Aakansha Kedia
 
 ## AI Usage Disclaimer
 
-I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements (in ``templates/base.html``), and to integrate my SQL queries with Flask routes. I also used it to make the baseline ``index.html``. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project. I also used Claude to help me deploy this project to Google Cloud, which ended up not working, so I switched to Render.
-
+I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements (in ``templates/base.html``), and to integrate my SQL queries with Flask routes. I also used it to make the baseline ``index.html``. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project. I also used Claude to help deploy this project to Google Cloud, which ended up not working, so I switched to Render.
 
 ## Tech Stack
 
@@ -38,15 +37,17 @@ I used Claude to generate commands to test my data integrity directly in the Ter
 ## Project Structure
 
 - `app.py`: Flask app routes and page logic
-- `database.py`: SQLite connection helper
+- `database.py`: SQLite connection helper, initializes database
 - `import_data.py`: Imports CSV data into SQLite database
-- `schema.sql`: Database schema (genres, consoles, games)
+- `schema.sql`: Database schema and indexes
 - `VideoGamesSales.csv`: Source dataset
-- `games.db`: Generated SQLite database file
-- `templates/index.html`: Home page with paginated table
-- `templates/add_game.html`: Add game form
-- `templates/edit_game.html`: Edit game form
-- `templates/report.html`: Filtered report page with stats
+- `requirements.txt`: Python dependencies
+- `templates/`: Jinja2 HTML templates
+	- `base.html`: Base layout and styles
+	- `index.html`: Home page with paginated table
+	- `add_game.html`: Add game form
+	- `edit_game.html`: Edit game form
+	- `report.html`: Filtered report page with stats
 
 ## Initialize Database
 
