@@ -22,3 +22,9 @@ CREATE TABLE IF NOT EXISTS games (
     FOREIGN KEY (console_id) REFERENCES consoles(id),
     FOREIGN KEY (genre_id) REFERENCES genres(id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_games_genre ON games(genre_id);
+CREATE INDEX IF NOT EXISTS idx_games_console ON games(console_id);
+CREATE INDEX IF NOT EXISTS idx_games_score ON games(critic_score);
+CREATE INDEX IF NOT EXISTS idx_genres_name ON genres(name);
+CREATE INDEX IF NOT EXISTS idx_consoles_name ON consoles(name);
