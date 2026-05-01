@@ -161,6 +161,7 @@ def report():
 
             query += ' ORDER BY games.critic_score DESC'
 
+            # replace question marks with params
             games = db.execute(query, params).fetchall()
 
             if games:

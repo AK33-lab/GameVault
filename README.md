@@ -8,7 +8,7 @@ Aakansha Kedia
 
 ## AI Usage Disclaimer
 
-I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements (in ``templates/base.html``), and to integrate my SQL queries with Flask routes. I also used it to make the baseline ``index.html``. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project.
+I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements (in ``templates/base.html``), and to integrate my SQL queries with Flask routes. I also used it to make the baseline ``index.html``. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project. I also used Claude to help me deploy this project to Google Cloud, which ended up not working, so I switched to Render.
 
 
 ## Tech Stack
@@ -17,6 +17,7 @@ I used Claude to generate commands to test my data integrity directly in the Ter
 - Flask
 - SQLite
 - HTML (Jinja templates)
+- Render
 
 ## Features
 
@@ -49,16 +50,16 @@ I used Claude to generate commands to test my data integrity directly in the Ter
 
 ## Initialize Database
 
-Run the importer to create tables from `schema.sql` and load data from `VideoGamesSales.csv`:
+For local system testing, run:
 
 ```bash
 python3 import_data.py
 ```
 
-## Run the App
-
 ```bash
 python3 app.py
 ```
 
-Open the URL shown in terminal.
+## Website URL
+
+You can visit: https://gamevault-ufud.onrender.com to run the web-app. Render takes a few seconds to load the page.
