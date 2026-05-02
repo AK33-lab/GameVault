@@ -6,11 +6,6 @@ A web application for browsing and managing video game sales data.
 
 You can visit: https://gamevault-ufud.onrender.com to run the web-app. Render takes a few seconds to load the page.
 
-
-## AI Usage Disclaimer
-
-I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements (in ``templates/base.html``), and to integrate my SQL queries with Flask routes. I also used it to make the baseline ``index.html``. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project. I also used Claude to help deploy this project to Google Cloud, which ended up not working, so I switched to Render.
-
 ## Tech Stack
 
 - Python 3
@@ -61,3 +56,7 @@ python3 import_data.py
 ```bash
 python3 app.py
 ```
+
+## AI Usage Disclaimer
+
+I used Claude to generate commands to test my data integrity directly in the Terminal (correct # of rows etc), add colorful UI elements (in ``templates/base.html``), and to integrate my SQL queries with Flask routes. I also used it to make the baseline ``index.html``. Through my use of AI for this purpose, I learnt about Jinja templates, a topic which I was unfamiliar with prior to working on this project. I also used Claude to help deploy this project to Google Cloud, which ended up not working, so I switched to Render.
