@@ -2,9 +2,10 @@
 
 A web application for browsing and managing video game sales data.
 
-## Author
+## Website URL
 
-Aakansha Kedia
+You can visit: https://gamevault-ufud.onrender.com to run the web-app. Render takes a few seconds to load the page.
+
 
 ## AI Usage Disclaimer
 
@@ -49,9 +50,9 @@ I used Claude to generate commands to test my data integrity directly in the Ter
 	- `edit_game.html`: Edit game form
 	- `report.html`: Filtered report page with stats
 
-## Initialize Database
+## Local Testing
 
-For local system testing, run:
+To test on localhost, run:
 
 ```bash
 python3 import_data.py
@@ -60,7 +61,3 @@ python3 import_data.py
 ```bash
 python3 app.py
 ```
-
-## Website URL
-
-You can visit: https://gamevault-ufud.onrender.com to run the web-app. Render takes a few seconds to load the page.
